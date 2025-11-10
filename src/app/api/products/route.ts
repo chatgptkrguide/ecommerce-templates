@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
+import { Prisma } from '@prisma/client'
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,7 +11,7 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '12')
 
-    const where: any = {
+    const where: Prisma.ProductWhereInput = {
       status: 'ACTIVE',
     }
 
@@ -28,7 +29,7 @@ export async function GET(request: NextRequest) {
       ]
     }
 
-    let orderBy: any = { createdAt: 'desc' }
+    let orderBy: Prisma.ProductOrderByWithRelationInput = { createdAt: 'desc' }
     if (sort === 'price-asc') orderBy = { price: 'asc' }
     if (sort === 'price-desc') orderBy = { price: 'desc' }
     if (sort === 'name') orderBy = { name: 'asc' }

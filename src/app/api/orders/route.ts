@@ -4,6 +4,12 @@ import { prisma } from '@/lib/db/prisma'
 import { authOptions } from '@/lib/auth/auth-options'
 import { nanoid } from 'nanoid'
 
+interface OrderItemInput {
+  productId: string
+  variantId?: string
+  quantity: number
+}
+
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
@@ -23,7 +29,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 상품 정보 및 재고 확인
-    const productIds = items.map((item: any) => item.productId)
+    const productIds = items.map((item: OrderItemInput) => item.productId)
     const products = await prisma.product.findMany({
       where: { id: { in: productIds }, status: 'ACTIVE' },
     })
@@ -48,7 +54,7 @@ export async function POST(request: NextRequest) {
 
     // 총액 계산
     let totalAmount = 0
-    const orderItems = items.map((item: any) => {
+    const orderItems = items.map((item: OrderItemInput) => {
       const product = products.find((p) => p.id === item.productId)!
       const subtotal = product.price * item.quantity
       totalAmount += subtotal
@@ -156,7 +162,7 @@ export async function POST(request: NextRequest) {
 }
 
 // 주문 목록 조회
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions)
 
