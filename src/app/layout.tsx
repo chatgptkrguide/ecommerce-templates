@@ -8,6 +8,9 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Basic Storefront - 이커머스 쇼핑몰',
   description: '완전한 기능을 갖춘 현대적인 이커머스 쇼핑몰',
+  icons: {
+    icon: '/images/logo.png',
+  },
 }
 
 export default function RootLayout({
