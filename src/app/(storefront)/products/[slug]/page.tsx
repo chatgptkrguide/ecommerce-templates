@@ -7,15 +7,23 @@ import { Card } from '@/components/ui/card'
 import { Star } from 'lucide-react'
 
 export async function generateStaticParams() {
-  const products = await prisma.product.findMany({
-    where: { status: 'ACTIVE' },
-    select: { slug: true },
-    take: 50,
-  })
+  // Handle missing DATABASE_URL gracefully during build
+  try {
+    const products = await prisma.product.findMany({
+      where: { status: 'ACTIVE' },
+      select: { slug: true },
+      take: 50,
+    })
 
-  return products.map((product) => ({
-    slug: product.slug,
-  }))
+    return products.map((product) => ({
+      slug: product.slug,
+    }))
+  } catch (error) {
+    // If database is unavailable during build, return empty array
+    // Pages will be dynamically rendered on-demand instead
+    console.warn('Database unavailable during build, using dynamic rendering')
+    return []
+  }
 }
 
 export default async function ProductDetailPage({
