@@ -18,7 +18,7 @@ export async function generateStaticParams() {
     return products.map((product) => ({
       slug: product.slug,
     }))
-  } catch (error) {
+  } catch {
     // If database is unavailable during build, return empty array
     // Pages will be dynamically rendered on-demand instead
     console.warn('Database unavailable during build, using dynamic rendering')
